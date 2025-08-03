@@ -1,0 +1,32 @@
+## ide
+**/.idea
+*.iml
+rebel.xml
+
+## backend
+**/target
+**/logs
+
+## front
+**/*.lock
+os_del.cmd
+os_del_doc.cmd
+.svn
+derby.log
+
+
+# 忽略日志目录和日志文件
+logs/
+*.log
+*.log.*
+
+# 忽略 undefined 日志路径（常见于 logback 未配置 LOG_HOME 时）
+*_IS_UNDEFINED*
+logging.file.name_IS_UNDEFINED*
+
+# 忽略 target 构建目录（如为 Maven 项目）
+target/
+
+# 忽略 IDE 文件（如使用 IDEA）
+.idea/
+
