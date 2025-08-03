@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+	<!--定义日志文件的存储地址 -->
+	<springProperty name="LOG_HOME" source="logging.file.name"/>
+	<property name="MODULE_NAME" value="order"/>
+
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+			</layout>
+		</encoder>
+	</appender>
+
+	<!-- 所有日志输出 -->
+	<appender name="INFO_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/${MODULE_NAME}-info.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- 所有日志文件的命名规则 -->
+			<FileNamePattern>${LOG_HOME}/${MODULE_NAME}-info-%d{yyyy-MM-dd}_%04i.log</FileNamePattern>
+			<!-- 单个日志文件最大大小为 20MB -->
+			<maxFileSize>10MB</maxFileSize>
+			<!-- 最多保留 60 天的历史日志 -->
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+			</layout>
+		</encoder>
+	</appender>
+
+	<!-- 错误日志输出 -->
+	<appender name="ERROR_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/${MODULE_NAME}-error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- 错误日志文件的命名规则 -->
+			<FileNamePattern>${LOG_HOME}/${MODULE_NAME}-error-%d{yyyy-MM-dd}_%04i.log</FileNamePattern>
+			<!-- 单个日志文件最大大小为 20MB -->
+			<maxFileSize>10MB</maxFileSize>
+			<!-- 最多保留 60 天的历史日志 -->
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout">
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%tid] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+			</layout>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	<appender name="grpc-log" class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.log.GRPCLogClientAppender">
+		<encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+			<layout class="org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc.TraceIdMDCPatternLogbackLayout">
+				<Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] [%thread] %-5level %logger{36} -%msg%n</Pattern>
+			</layout>
+		</encoder>
+	</appender>
+
+	<!-- 日志输出级别 -->
+	<root level="INFO">
+		<appender-ref ref="INFO_APPENDER"/>
+		<appender-ref ref="ERROR_APPENDER"/>
+		<appender-ref ref="STDOUT"/>
+		<appender-ref ref="grpc-log"/>
+	</root>
+
+</configuration>
